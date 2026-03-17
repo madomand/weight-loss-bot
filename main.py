@@ -41,7 +41,7 @@ def start(message):
     bot.send_invoice(
         chat_id=message.chat.id,
         title="Гайд «Я выбираю себя»",
-        description="Ваш доступ к программе.",
+        description="Ваш доступ к гайду.",
         invoice_payload="diet_payload",
         provider_token=PAYMENT_TOKEN,
         currency="RUB",
