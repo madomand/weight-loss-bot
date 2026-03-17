@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 import os
 
-# Ключи из Bothost
+# Берем ключи из Bothost
 TOKEN = os.getenv('BOT_TOKEN')
 PAYMENT_TOKEN = os.getenv('PAYMENT_TOKEN')
 
@@ -37,15 +37,15 @@ def start(message):
     
     bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown")
 
-    # Отправляем счет (Описание теперь максимально короткое)
+    # Используем явные имена аргументов, чтобы избежать TypeError
     bot.send_invoice(
-        message.chat.id, 
-        "Гайд «Я выбираю себя»", 
-        "Ваш доступ к программе.", # Убрали длинное описание про меню и упражнения
-        "payload", 
-        PAYMENT_TOKEN, 
-        "RUB",         
-        [types.LabeledPrice("Гайд", 39900)], 
+        chat_id=message.chat.id,
+        title="Гайд «Я выбираю себя»",
+        description="Ваш доступ к программе.",
+        invoice_payload="diet_payload",
+        provider_token=PAYMENT_TOKEN,
+        currency="RUB",
+        prices=[types.LabeledPrice("Гайд", 39900)],
         start_parameter="diet_guide"
     )
 
@@ -58,7 +58,7 @@ def success_pay(message):
     bot.send_message(message.chat.id, "✅ Оплата прошла! Твой гайд готовится к отправке...")
     if os.path.exists(FILE_NAME):
         with open(FILE_NAME, 'rb') as f:
-            bot.send_document(message.chat.id, f, caption="Твой гайд готов! Начинаем преображение. 🚀")
+            bot.send_document(message.chat.id, f, caption="Твой гайд готов! 🚀")
 
 if __name__ == "__main__":
     bot.infinity_polling()
